@@ -1,115 +1,123 @@
 #include <stdio.h>
 
+#define TAM 10
+#define NAVIO 3
+#define AGUA 0
+#define PARTE_NAVIO 3
+
 int main() {
 
-    // Matriz do tabuleiro 10x10
-    int tabuleiro[10][10];
+    // Tabuleiro 10x10 inicializado com água
+    int tabuleiro[TAM][TAM] = {0};
 
-    // Variáveis de controle
-    int linha, coluna;
+    int erro = 0;
 
-    // Letras das colunas
-    char letras[10] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
+    // ==========================
+    // NAVIO HORIZONTAL
+    // ==========================
+    int linhaH = 1;
+    int colunaH = 2;
 
-    // ==============================
-    // INICIALIZAÇÃO DO TABULEIRO
-    // ==============================
+    if (colunaH + NAVIO <= TAM) {
+        for (int i = 0; i < NAVIO; i++) {
 
-    // Preenche todo o tabuleiro com 0
-    for (linha = 0; linha < 10; linha++) {
-        for (coluna = 0; coluna < 10; coluna++) {
-            tabuleiro[linha][coluna] = 0;
-        }
-    }
-
-    // ==============================
-    // NAVIOS
-    // ==============================
-
-    // Vetores dos navios
-    int navioHorizontal[3] = {3, 3, 3};
-    int navioVertical[3] = {3, 3, 3};
-
-    // Coordenadas iniciais
-    int linhaHorizontal = 2;
-    int colunaHorizontal = 4;
-
-    int linhaVertical = 5;
-    int colunaVertical = 1;
-
-    // ==============================
-    // POSICIONA NAVIO HORIZONTAL
-    // ==============================
-
-    // Verifica se cabe no tabuleiro
-    if (colunaHorizontal + 3 <= 10) {
-
-        for (coluna = 0; coluna < 3; coluna++) {
-
-            tabuleiro[linhaHorizontal][colunaHorizontal + coluna] =
-                navioHorizontal[coluna];
-        }
-
-    } else {
-        printf("Erro: navio horizontal fora do tabuleiro.\n");
-    }
-
-    // ==============================
-    // POSICIONA NAVIO VERTICAL
-    // ==============================
-
-    // Verifica se cabe no tabuleiro
-    if (linhaVertical + 3 <= 10) {
-
-        int sobreposicao = 0;
-
-        // Verifica sobreposição
-        for (linha = 0; linha < 3; linha++) {
-
-            if (tabuleiro[linhaVertical + linha][colunaVertical] == 3) {
-                sobreposicao = 1;
+            if (tabuleiro[linhaH][colunaH + i] != AGUA) {
+                erro = 1;
             }
         }
 
-        // Posiciona se não houver sobreposição
-        if (sobreposicao == 0) {
-
-            for (linha = 0; linha < 3; linha++) {
-
-                tabuleiro[linhaVertical + linha][colunaVertical] =
-                    navioVertical[linha];
+        if (!erro) {
+            for (int i = 0; i < NAVIO; i++) {
+                tabuleiro[linhaH][colunaH + i] = PARTE_NAVIO;
             }
+        }
+    }
 
-        } else {
-            printf("Erro: os navios estão se sobrepondo.\n");
+    // ==========================
+    // NAVIO VERTICAL
+    // ==========================
+    int linhaV = 4;
+    int colunaV = 7;
+
+    erro = 0;
+
+    if (linhaV + NAVIO <= TAM) {
+
+        for (int i = 0; i < NAVIO; i++) {
+
+            if (tabuleiro[linhaV + i][colunaV] != AGUA) {
+                erro = 1;
+            }
         }
 
-    } else {
-        printf("Erro: navio vertical fora do tabuleiro.\n");
+        if (!erro) {
+
+            for (int i = 0; i < NAVIO; i++) {
+                tabuleiro[linhaV + i][colunaV] = PARTE_NAVIO;
+            }
+        }
     }
 
-    // ==============================
-    // EXIBE O TABULEIRO
-    // ==============================
+    // ==========================
+    // NAVIO DIAGONAL PRINCIPAL
+    // ==========================
+    int linhaD1 = 2;
+    int colunaD1 = 0;
 
-    printf("\n===== BATALHA NAVAL =====\n\n");
+    erro = 0;
 
-    // Mostra letras das colunas
-    printf("   ");
+    if (linhaD1 + NAVIO <= TAM &&
+        colunaD1 + NAVIO <= TAM) {
 
-    for (coluna = 0; coluna < 10; coluna++) {
-        printf("%c ", letras[coluna]);
+        for (int i = 0; i < NAVIO; i++) {
+
+            if (tabuleiro[linhaD1 + i][colunaD1 + i] != AGUA) {
+                erro = 1;
+            }
+        }
+
+        if (!erro) {
+
+            for (int i = 0; i < NAVIO; i++) {
+                tabuleiro[linhaD1 + i][colunaD1 + i] = PARTE_NAVIO;
+            }
+        }
     }
 
-    printf("\n");
+    // ==========================
+    // NAVIO DIAGONAL SECUNDÁRIA
+    // ==========================
+    int linhaD2 = 0;
+    int colunaD2 = 9;
 
-    // Mostra linhas e conteúdo do tabuleiro
-    for (linha = 0; linha < 10; linha++) {
+    erro = 0;
 
-        // Ajusta alinhamento do número 10
-        printf("%2d ", linha + 1);
+    if (linhaD2 + NAVIO <= TAM &&
+        colunaD2 - (NAVIO - 1) >= 0) {
 
-        for (coluna = 0; coluna < 10; coluna++) {
+        for (int i = 0; i < NAVIO; i++) {
+
+            if (tabuleiro[linhaD2 + i][colunaD2 - i] != AGUA) {
+                erro = 1;
+            }
+        }
+
+        if (!erro) {
+
+            for (int i = 0; i < NAVIO; i++) {
+                tabuleiro[linhaD2 + i][colunaD2 - i] = PARTE_NAVIO;
+            }
+        }
+    }
+
+    // ==========================
+    // EXIBIÇÃO DO TABULEIRO
+    // ==========================
+    printf("TABULEIRO BATALHA NAVAL\n\n");
+
+    for (int linha = 0; linha < TAM; linha++) {
+
+        for (int coluna = 0; coluna < TAM; coluna++) {
 
             printf("%d ", tabuleiro[linha][coluna]);
         }
@@ -119,7 +127,3 @@ int main() {
 
     return 0;
 }
-
-
-
-
